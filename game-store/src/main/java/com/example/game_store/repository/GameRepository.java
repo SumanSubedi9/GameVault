@@ -10,9 +10,26 @@ import java.util.List;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
-    Game findById(long id);
 
+    // ==================== BASIC SEARCH ====================
+
+    /**
+     * Find games by title (case-insensitive partial match)
+     * 
+     * @param title the title to search for
+     * @return list of games containing the title
+     */
     @Query("SELECT g FROM Game g WHERE LOWER(g.title) LIKE LOWER(CONCAT('%', :title, '%'))")
-    List<Game> findByTitle(@Param("title") String title);
+    List<Game> findByTitleContainingIgnoreCase(@Param("title") String title);
+
+    // ==================== UTILITY METHODS ====================
+
+    /**
+     * Check if a game with the given title exists (case-insensitive)
+     * 
+     * @param title the title to check
+     * @return true if game exists, false otherwise
+     */
+    boolean existsByTitleIgnoreCase(String title);
 
 }

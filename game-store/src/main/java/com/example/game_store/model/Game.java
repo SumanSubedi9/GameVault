@@ -4,7 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,17 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Title is mandatory")
     private String title;
+
+    @NotBlank(message = "Genre is mandatory")
+    private String genre;
+
+    @NotBlank(message = "Platform is mandatory")
+    private String platform;
+
+    @NotNull(message = "Price is mandatory")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be positive")
+    private Double price;
 
 }
