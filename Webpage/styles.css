@@ -1,0 +1,17 @@
+h1 {
+    color: greenyellow;
+}
+P {
+    font-size: 18px;
+    color: blue
+}
+table {
+    width: 100%;
+    border: 1px solid red;
+}
+id#price {
+    color: green;
+}
+body {
+    background-color: yellow;
+}
