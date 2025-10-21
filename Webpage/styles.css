@@ -1,17 +1,17 @@
 h1 {
-    color: greenyellow;
+    color: black;
 }
 P {
     font-size: 18px;
-    color: blue
+    color: black;
 }
 table {
     width: 100%;
     border: 1px solid red;
 }
-id#price {
+#price {
     color: green;
 }
 body {
-    background-color: yellow;
+    background-color: white;
 }
