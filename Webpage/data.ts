@@ -1,0 +1,25 @@
+import { Game } from "./types";
+
+export const games: Game[] = [
+  { genre: "RPG", platform: "PC", price: 59.99, title: "Elden Ring" },
+    { genre: "RPG", platform: "PC", price: 59.99, title: "Elden Ring" },
+    { genre: "Action", platform: "PlayStation 5", price: 69.99, title: "God of War: Ragnarok" },
+    { genre: "Adventure", platform: "Nintendo Switch", price: 69.99, title: "The Legend of Zelda: Tears of the Kingdom" },
+    { genre: "Action RPG", platform: "PC", price: 49.99, title: "Cyberpunk 2077" },
+    { genre: "Sports", platform: "PlayStation 5", price: 69.99, title: "FIFA 24" },
+    { genre: "Sandbox", platform: "PC", price: 29.99, title: "Minecraft" },
+    { genre: "Action", platform: "Xbox Series X", price: 59.99, title: "Grand Theft Auto V" },
+    { genre: "Action", platform: "PlayStation 4", price: 59.99, title: "Red Dead Redemption 2" },
+    { genre: "Shooter", platform: "PC", price: 69.99, title: "Call of Duty: Modern Warfare III" },
+    { genre: "Battle Royale", platform: "PC", price: 0.00, title: "Fortnite" },
+    { genre: "RPG", platform: "PlayStation 5", price: 69.99, title: "Hogwarts Legacy" },
+    { genre: "Horror", platform: "PC", price: 59.99, title: "Resident Evil 4 Remake" },
+    { genre: "RPG", platform: "Xbox Series X", price: 69.99, title: "Starfield" },
+    { genre: "RPG", platform: "PC", price: 39.99, title: "The Witcher 3: Wild Hunt" },
+    { genre: "Action", platform: "PC", price: 59.99, title: "Assassin’s Creed Mirage" },
+    { genre: "Shooter", platform: "PC", price: 0.00, title: "Overwatch 2" },
+    { genre: "Racing", platform: "Xbox Series X", price: 59.99, title: "Forza Horizon 5" },
+    { genre: "RPG", platform: "PC", price: 59.99, title: "Baldur’s Gate 3" },
+    { genre: "Battle Royale", platform: "PC", price: 0.00, title: "Apex Legends" },
+    { genre: "Action", platform: "PlayStation 5", price: 69.99, title: "Spider-Man 2" },
+];
