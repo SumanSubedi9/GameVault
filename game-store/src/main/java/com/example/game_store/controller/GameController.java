@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.game_store.model.Game;
 import com.example.game_store.service.GameService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/api/games")
+@CrossOrigin(origins = "http://localhost:3000")
 public class GameController {
 
     // Dependency injections and endpoint mappings
