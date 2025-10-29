@@ -70,10 +70,8 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
     /**
      * Calculate total price of all items in user's cart
-     * 
-     * @param userId the user ID
-     * @return total cart value
+     * Uses discount price if available, otherwise original price
      */
-    @Query("SELECT COALESCE(SUM(c.quantity * c.game.price), 0.0) FROM CartItem c WHERE c.userId = :userId")
+    @Query("SELECT COALESCE(SUM(c.quantity * (CASE WHEN c.game.discountPrice IS NOT NULL THEN c.game.discountPrice ELSE c.game.originalPrice END)), 0.0) FROM CartItem c WHERE c.userId = :userId")
     Double getTotalCartValue(@Param("userId") Long userId);
 }

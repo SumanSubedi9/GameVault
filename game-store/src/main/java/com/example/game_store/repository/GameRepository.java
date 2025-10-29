@@ -15,21 +15,48 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     /**
      * Find games by title (case-insensitive partial match)
-     * 
-     * @param title the title to search for
-     * @return list of games containing the title
      */
     @Query("SELECT g FROM Game g WHERE LOWER(g.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<Game> findByTitleContainingIgnoreCase(@Param("title") String title);
+
+    // ==================== ENHANCED SEARCH METHODS ====================
+
+    /**
+     * Find games on sale (discount price is not null and less than original price)
+     */
+    @Query("SELECT g FROM Game g WHERE g.discountPrice IS NOT NULL AND g.discountPrice < g.originalPrice")
+    List<Game> findGamesOnSale();
+
+    /**
+     * Find games by minimum rating
+     */
+    List<Game> findByRatingGreaterThanEqual(Double minRating);
+
+    /**
+     * Find games by genre (case-insensitive)
+     */
+    List<Game> findByGenreIgnoreCase(String genre);
+
+    /**
+     * Find games by platform (case-insensitive)
+     */
+    List<Game> findByPlatformIgnoreCase(String platform);
+
+    /**
+     * Find games by badge (case-insensitive)
+     */
+    List<Game> findByBadgeIgnoreCase(String badge);
+
+    /**
+     * Find games by price range (using current price logic)
+     */
+    @Query("SELECT g FROM Game g WHERE (CASE WHEN g.discountPrice IS NOT NULL THEN g.discountPrice ELSE g.originalPrice END) BETWEEN :minPrice AND :maxPrice")
+    List<Game> findByPriceRange(@Param("minPrice") Double minPrice, @Param("maxPrice") Double maxPrice);
 
     // ==================== UTILITY METHODS ====================
 
     /**
      * Check if a game with the given title exists (case-insensitive)
-     * 
-     * @param title the title to check
-     * @return true if game exists, false otherwise
      */
     boolean existsByTitleIgnoreCase(String title);
-
 }

@@ -19,20 +19,13 @@ public class UserService {
      * Register a new user
      */
     public UserResponseDto registerUser(UserRegistrationDto registrationDto) {
-        // Check if username already exists
-        if (userRepository.findByUsernameIgnoreCase(registrationDto.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
+        // Validate business rules
+        validateUserRegistration(registrationDto);
 
-        // Check if email already exists
-        if (userRepository.findByEmailIgnoreCase(registrationDto.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
-        }
-
-        // Create new user
+        // Create new user with data sanitization
         User user = new User();
-        user.setUsername(registrationDto.getUsername());
-        user.setEmail(registrationDto.getEmail());
+        user.setUsername(registrationDto.getUsername().trim());
+        user.setEmail(registrationDto.getEmail().toLowerCase().trim());
         // Note: In production, you should hash the password using BCrypt
         user.setPassword(registrationDto.getPassword());
 
@@ -45,14 +38,25 @@ public class UserService {
      */
     public UserResponseDto loginUser(UserLoginDto loginDto) {
         User user = userRepository.findByUsernameOrEmailIgnoreCase(loginDto.getUsernameOrEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid username/email or password"));
+                .orElseThrow(() -> new EntityNotFoundException("Invalid username/email or password"));
 
         // Note: In production, you should verify hashed password using BCrypt
         if (!user.getPassword().equals(loginDto.getPassword())) {
-            throw new RuntimeException("Invalid username/email or password");
+            throw new EntityNotFoundException("Invalid username/email or password");
         }
 
         return convertToResponseDto(user);
+    }
+
+    // Private helper method for business validation
+    private void validateUserRegistration(UserRegistrationDto registrationDto) {
+        if (userRepository.findByUsernameIgnoreCase(registrationDto.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        if (userRepository.findByEmailIgnoreCase(registrationDto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
     }
 
     /**

@@ -42,6 +42,10 @@ public class CartItem {
 
     // Helper method to calculate total price for this cart item
     public Double getTotalPrice() {
-        return game != null && game.getPrice() != null ? game.getPrice() * quantity : 0.0;
+        if (game != null) {
+            Double currentPrice = game.getCurrentPrice(); // Uses the new helper method
+            return currentPrice != null ? currentPrice * quantity : 0.0;
+        }
+        return 0.0;
     }
 }
