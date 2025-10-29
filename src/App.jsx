@@ -1,49 +1,91 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import React from "react";
+import Layout from "./components/Layout";
+import HeroSection from "./components/HeroSection";
+import GameSection from "./components/GameSection";
+import Collection from "./components/Collection";
+import { useGames, useGameCategories } from "./hooks/useGames";
 
-function App() {
-  const [count, setCount] = useState(0);
+// Simple routing based on hash
+const useHashRouter = () => {
+  const [currentHash, setCurrentHash] = React.useState(window.location.hash);
+
+  React.useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  return currentHash;
+};
+
+// Home page component
+const HomePage = () => {
+  const { games, loading, error } = useGames();
+  const { featuredGames, saleGames, freeGames, popularGames } =
+    useGameCategories(games);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
-      <div className="flex gap-8 mb-8">
-        <a href="https://vite.dev" target="_blank">
-          <img
-            src={viteLogo}
-            className="h-24 hover:animate-pulse"
-            alt="Vite logo"
+    <>
+      {error && (
+        <div className="bg-red-700 text-white p-4 rounded mb-6 mx-4">
+          Error loading games: {error}
+        </div>
+      )}
+
+      {/* Hero Section */}
+      <HeroSection featuredGames={featuredGames} />
+
+      {/* If loading show simple placeholders */}
+      {loading ? (
+        <div className="text-gray-300 text-center py-8">
+          <div className="animate-pulse">Loading games...</div>
+        </div>
+      ) : (
+        <div className="px-4 sm:px-6 lg:px-8">
+          <GameSection
+            title="🔥 On Sale"
+            games={saleGames}
+            seeMoreLink="#collection"
           />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img
-            src={reactLogo}
-            className="h-24 hover:animate-spin"
-            alt="React logo"
+          <GameSection
+            title="🆓 Free to Play"
+            games={freeGames}
+            seeMoreLink="#collection"
           />
-        </a>
-      </div>
+          <GameSection
+            title="⭐ Popular Games"
+            games={popularGames}
+            seeMoreLink="#collection"
+          />
+        </div>
+      )}
+    </>
+  );
+};
 
-      <h1 className="text-5xl font-bold mb-8 text-blue-400">Vite + React</h1>
+// App fetches from your Spring Boot backend using Axios
+// API: GET /api/games - returns all games from your catalog
+// Frontend filters/categorizes on the client side
 
-      <div className="bg-gray-800 p-6 rounded-lg">
-        <button
-          onClick={() => setCount((count) => count + 1)}
-          className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded font-medium transition-colors"
-        >
-          count is {count}
-        </button>
-        <p className="mt-4 text-gray-300">
-          Edit{" "}
-          <code className="bg-gray-700 px-2 py-1 rounded">src/App.jsx</code> and
-          save to test HMR
-        </p>
-      </div>
+function App() {
+  const currentHash = useHashRouter();
 
-      <p className="mt-8 text-gray-400 text-sm">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+  const renderPage = () => {
+    switch (currentHash) {
+      case "#collection":
+        return <Collection />;
+      default:
+        return <HomePage />;
+    }
+  };
+
+  return (
+    <Layout>
+      <div className="w-full py-8">{renderPage()}</div>
+    </Layout>
   );
 }
 
