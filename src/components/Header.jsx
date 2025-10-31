@@ -11,7 +11,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="text-2xl font-bold text-purple-500">GameStore</div>
+            <div className="text-2xl font-bold text-white">GameVault</div>
           </div>
 
           {/* Desktop Navigation */}
@@ -33,13 +33,13 @@ const Header = () => {
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 2.5M7 13l2.5 2.5m6 0L21 13M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"
                 />
               </svg>
-              <span className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 0
               </span>
             </button>
             <Link
               to="/login"
-              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors border border-gray-600"
             >
               Sign In
             </Link>
@@ -103,7 +103,7 @@ const Header = () => {
                 Support
               </a>
               <div className="pt-4 pb-3 border-t border-gray-700">
-                <button className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                <button className="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors border border-gray-600">
                   Sign In
                 </button>
               </div>
