@@ -57,21 +57,21 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-5 bg-gray-100">
-      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 className="text-center text-3xl font-semibold text-gray-800 mb-8">
-          Sign Up
+    <div className="flex justify-center items-center min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-800">
+      <div className="bg-gray-900 p-8 sm:p-10 lg:p-12 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700">
+        <h2 className="text-center text-3xl font-bold text-white mb-8">
+          Create Account
         </h2>
         {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+          <div className="mb-6 p-4 bg-red-900/50 border border-red-500/50 text-red-300 rounded-lg backdrop-blur-sm">
             {error}
           </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
             <label
               htmlFor="username"
-              className="block mb-2 text-gray-600 font-medium"
+              className="block mb-2 text-gray-300 font-medium text-sm"
             >
               Username
             </label>
@@ -83,15 +83,15 @@ const Signup = () => {
               onChange={handleChange}
               required
               placeholder="Enter your username"
-              className="w-full p-3 border border-gray-300 rounded-md text-base transition-colors duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full p-4 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 text-base transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-gray-500"
             />
           </div>
-          <div className="mb-5">
+          <div>
             <label
               htmlFor="email"
-              className="block mb-2 text-gray-600 font-medium"
+              className="block mb-2 text-gray-300 font-medium text-sm"
             >
-              Email
+              Email Address
             </label>
             <input
               type="email"
@@ -101,13 +101,13 @@ const Signup = () => {
               onChange={handleChange}
               required
               placeholder="Enter your email"
-              className="w-full p-3 border border-gray-300 rounded-md text-base transition-colors duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full p-4 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 text-base transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-gray-500"
             />
           </div>
-          <div className="mb-5">
+          <div>
             <label
               htmlFor="password"
-              className="block mb-2 text-gray-600 font-medium"
+              className="block mb-2 text-gray-300 font-medium text-sm"
             >
               Password
             </label>
@@ -119,13 +119,13 @@ const Signup = () => {
               onChange={handleChange}
               required
               placeholder="Enter your password"
-              className="w-full p-3 border border-gray-300 rounded-md text-base transition-colors duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full p-4 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 text-base transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-gray-500"
             />
           </div>
-          <div className="mb-5">
+          <div>
             <label
               htmlFor="confirmPassword"
-              className="block mb-2 text-gray-600 font-medium"
+              className="block mb-2 text-gray-300 font-medium text-sm"
             >
               Confirm Password
             </label>
@@ -137,27 +137,58 @@ const Signup = () => {
               onChange={handleChange}
               required
               placeholder="Confirm your password"
-              className="w-full p-3 border border-gray-300 rounded-md text-base transition-colors duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full p-4 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 text-base transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-gray-500"
             />
           </div>
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full p-3 text-white border-none rounded-md text-base cursor-pointer transition-colors duration-300 ${
+            className={`w-full p-4 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 ${
               isLoading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? "bg-gray-600 cursor-not-allowed opacity-50"
+                : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5"
             }`}
           >
-            {isLoading ? "Creating Account..." : "Sign Up"}
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Creating Account...
+              </span>
+            ) : (
+              "Create Account"
+            )}
           </button>
         </form>
-        <p className="text-center mt-5 text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
-            Login here
-          </Link>
-        </p>
+        <div className="mt-8 pt-6 border-t border-gray-700">
+          <p className="text-center text-gray-400 text-sm">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200"
+            >
+              Sign in here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
