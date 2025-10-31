@@ -71,42 +71,15 @@ const Header = () => {
         {/* Mobile Navigation Menu */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-700">
-              <a
-                href="#"
-                className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
+            <Navbar isMobile={true} onLinkClick={() => setIsMenuOpen(false)} />
+            <div className="px-2 pt-4 pb-3 border-t border-gray-700">
+              <Link
+                to="/login"
+                onClick={() => setIsMenuOpen(false)}
+                className="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors border border-gray-600 block text-center"
               >
-                Store
-              </a>
-              <a
-                href="#"
-                className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
-              >
-                Wishlist
-              </a>
-              <a
-                href="#"
-                className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
-              >
-                Cart
-              </a>
-              <a
-                href="#collection"
-                className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
-              >
-                Collection
-              </a>
-              <a
-                href="#"
-                className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
-              >
-                Support
-              </a>
-              <div className="pt-4 pb-3 border-t border-gray-700">
-                <button className="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors border border-gray-600">
-                  Sign In
-                </button>
-              </div>
+                Sign In
+              </Link>
             </div>
           </div>
         )}
