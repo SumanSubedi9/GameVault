@@ -1,91 +1,26 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import HeroSection from "./components/HeroSection";
-import GameSection from "./components/GameSection";
 import Collection from "./components/Collection";
-import { useGames, useGameCategories } from "./hooks/useGames";
+import HomePage from "./pages/HomePage";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
-// Simple routing based on hash
-const useHashRouter = () => {
-  const [currentHash, setCurrentHash] = React.useState(window.location.hash);
-
-  React.useEffect(() => {
-    const handleHashChange = () => {
-      setCurrentHash(window.location.hash);
-    };
-
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
-
-  return currentHash;
-};
-
-// Home page component
-const HomePage = () => {
-  const { games, loading, error } = useGames();
-  const { featuredGames, saleGames, freeGames, popularGames } =
-    useGameCategories(games);
-
-  return (
-    <>
-      {error && (
-        <div className="bg-red-700 text-white p-4 rounded mb-6 mx-4">
-          Error loading games: {error}
-        </div>
-      )}
-
-      {/* Hero Section */}
-      <HeroSection featuredGames={featuredGames} />
-
-      {/* If loading show simple placeholders */}
-      {loading ? (
-        <div className="text-gray-300 text-center py-8">
-          <div className="animate-pulse">Loading games...</div>
-        </div>
-      ) : (
-        <div className="px-4 sm:px-6 lg:px-8">
-          <GameSection
-            title="🔥 On Sale"
-            games={saleGames}
-            seeMoreLink="#collection"
-          />
-          <GameSection
-            title="🆓 Free to Play"
-            games={freeGames}
-            seeMoreLink="#collection"
-          />
-          <GameSection
-            title="⭐ Popular Games"
-            games={popularGames}
-            seeMoreLink="#collection"
-          />
-        </div>
-      )}
-    </>
-  );
-};
-
-// App fetches from your Spring Boot backend using Axios
-// API: GET /api/games - returns all games from your catalog
-// Frontend filters/categorizes on the client side
-
+// App with React Router
 function App() {
-  const currentHash = useHashRouter();
-
-  const renderPage = () => {
-    switch (currentHash) {
-      case "#collection":
-        return <Collection />;
-      default:
-        return <HomePage />;
-    }
-  };
-
   return (
-    <Layout>
-      <div className="w-full py-8">{renderPage()}</div>
-    </Layout>
+    <Router>
+      <Layout>
+        <div className="w-full py-8">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/collection" element={<Collection />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Routes>
+        </div>
+      </Layout>
+    </Router>
   );
 }
 
