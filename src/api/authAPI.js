@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8080/api/users";
+const API_BASE_URL = "/api/users";
 
 // Register a new user
 export const registerUser = async (userData) => {
