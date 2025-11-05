@@ -4,7 +4,8 @@ const isDevelopment = import.meta.env.DEV;
 export const API_CONFIG = {
   baseURL: isDevelopment
     ? import.meta.env.VITE_API_DEV_BASE_URL || "http://localhost:8080"
-    : import.meta.env.VITE_API_PROD_BASE_URL || "",
+    : import.meta.env.VITE_API_PROD_BASE_URL ||
+      "http://ec2-54-234-94-174.compute-1.amazonaws.com:8085",
   endpoints: {
     users: import.meta.env.VITE_API_USERS_ENDPOINT || "/api/users",
     games: import.meta.env.VITE_API_GAMES_ENDPOINT || "/api/games",
