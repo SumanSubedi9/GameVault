@@ -24,7 +24,7 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Value("${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}")
+    @Value("${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,http://trng2309-5.s3-website.us-east-2.amazonaws.com}")
     private String allowedOrigins;
 
     @Bean
