@@ -135,10 +135,6 @@ GameVault/
 
 This project is licensed under the MIT License.
 
-## 👥 Authors
-
-- **Suman Subedi** - Initial work
-
 ## 🎮 Happy Gaming!
 
 Enjoy building and using GameVault!
