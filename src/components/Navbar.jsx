@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 const Navbar = ({ isMobile = false, onLinkClick = () => {} }) => {
   const navItems = [
     { to: "/", label: "Store" },
+    { to: "/cart", label: "Cart" },
     { to: "/wishlist", label: "Wishlist" },
     { to: "/collection", label: "Collection" },
     { to: "/support", label: "Support" },
@@ -16,7 +17,7 @@ const Navbar = ({ isMobile = false, onLinkClick = () => {} }) => {
           <Link
             key={item.to}
             to={item.to}
-            className="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-colors"
+            className="bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent hover:from-blue-300 hover:via-purple-300 hover:to-pink-300 px-3 py-2 text-sm font-medium transition-all duration-300"
           >
             {item.label}
           </Link>
@@ -34,7 +35,7 @@ const Navbar = ({ isMobile = false, onLinkClick = () => {} }) => {
             key={item.to}
             to={item.to}
             onClick={onLinkClick}
-            className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium transition-colors hover:bg-gray-800 rounded-md"
+            className="bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent hover:from-blue-300 hover:via-purple-300 hover:to-pink-300 block px-3 py-2 text-base font-medium transition-all duration-300 hover:bg-gray-800 rounded-md"
           >
             {item.label}
           </Link>

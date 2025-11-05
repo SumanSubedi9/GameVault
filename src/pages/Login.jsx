@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { loginUser } from "../api/authAPI";
+import { login } from "../api/authAPI";
+import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../contexts/ToastContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,8 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { updateAuth } = useAuth();
+  const { addToast } = useToast();
 
   const handleChange = (e) => {
     setFormData({
@@ -27,12 +31,19 @@ const Login = () => {
     setError("");
 
     try {
-      await loginUser(formData);
-      alert("Login successful!");
-      // Redirect to dashboard or home page
-      navigate("/");
+      const response = await login(formData);
+      if (response.success) {
+        updateAuth(); // Update auth context
+        addToast("Login successful!", "success");
+        // Redirect to dashboard or home page
+        navigate("/");
+      } else {
+        setError(response.message || "Login failed");
+      }
     } catch (error) {
-      setError(error.message);
+      // Extract the actual error message
+      const errorMessage = error.message || "Login failed. Please try again.";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

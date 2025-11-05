@@ -1,129 +1,133 @@
-const API_BASE_URL = "/api/users";
+import { getApiUrl, API_CONFIG } from "../config/api";
 
-// Register a new user
-export const registerUser = async (userData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/register`, {
+// Registration
+export const register = async (userData) => {
+  const response = await fetch(
+    getApiUrl(`${API_CONFIG.endpoints.users}/register`),
+    {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Registration failed");
     }
+  );
 
-    return await response.json();
-  } catch (error) {
-    console.error("Registration error:", error);
-    throw error;
+  if (!response.ok) {
+    let errorMessage = `HTTP ${response.status}: Registration failed`;
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorData.error || errorMessage;
+    } catch {
+      const errorText = await response.text();
+      errorMessage = errorText || errorMessage;
+    }
+    throw new Error(errorMessage);
   }
+
+  const data = await response.json();
+
+  if (data.success) {
+    localStorage.setItem("token", data.user.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+  } else {
+    throw new Error(data.message || "Registration failed");
+  }
+  return data;
 };
 
-// Login user
-export const loginUser = async (credentials) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/login`, {
+// Login
+export const login = async (credentials) => {
+  const response = await fetch(
+    getApiUrl(`${API_CONFIG.endpoints.users}/login`),
+    {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),
-    });
+    }
+  );
 
-    if (!response.ok) {
+  if (!response.ok) {
+    let errorMessage = `HTTP ${response.status}: Login failed`;
+    try {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Login failed");
+      errorMessage = errorData.message || errorData.error || errorMessage;
+    } catch {
+      const errorText = await response.text();
+      errorMessage = errorText || errorMessage;
     }
-
-    const data = await response.json();
-
-    // Store user data in localStorage (you might want to use a more secure method)
-    if (data.user) {
-      localStorage.setItem("user", JSON.stringify(data.user));
-    }
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-    }
-
-    return data;
-  } catch (error) {
-    console.error("Login error:", error);
-    throw error;
+    throw new Error(errorMessage);
   }
+
+  const data = await response.json();
+
+  if (data.success) {
+    localStorage.setItem("token", data.user.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+  } else {
+    throw new Error(data.message || "Login failed");
+  }
+  return data;
 };
 
-// Logout user
-export const logoutUser = async () => {
-  try {
-    const token = localStorage.getItem("token");
+// Function to make authenticated API calls
+export const authenticatedFetch = async (url, options = {}) => {
+  const token = localStorage.getItem("token");
 
-    const response = await fetch(`${API_BASE_URL}/logout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+  const headers = {
+    ...options.headers,
+    "Content-Type": "application/json",
+  };
 
-    // Clear local storage regardless of response
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+  // Try different authorization header formats
+  if (token) {
+    // Most common format: Bearer token
+    headers.Authorization = `Bearer ${token}`;
 
-    if (!response.ok) {
-      console.warn("Logout request failed, but local storage cleared");
-    }
-
-    return true;
-  } catch (error) {
-    console.error("Logout error:", error);
-    // Still clear local storage even if request fails
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    throw error;
+    // Some backends also expect these alternative formats:
+    // headers.Authorization = token; // Just the token
+    // headers['X-Auth-Token'] = token; // Custom header
+    // headers['Authentication'] = `Bearer ${token}`; // Alternative spelling
   }
+
+  return fetch(url, {
+    ...options,
+    headers,
+  });
 };
 
-// Get user by ID
-export const getUserById = async (id) => {
-  try {
-    const token = localStorage.getItem("token");
+// Example: Get user cart
+export const getCart = async () => {
+  const response = await authenticatedFetch(
+    getApiUrl(API_CONFIG.endpoints.cart)
+  );
+  return response.json();
+};
 
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to fetch user");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Get user error:", error);
-    throw error;
-  }
+// Logout
+export const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  // Redirect to login page handled by components
 };
 
 // Get current user from localStorage
 export const getCurrentUser = () => {
   try {
     const user = localStorage.getItem("user");
-    return user ? JSON.parse(user) : null;
-  } catch (error) {
-    console.error("Error getting current user:", error);
+    const parsedUser = user ? JSON.parse(user) : null;
+    return parsedUser;
+  } catch {
     return null;
   }
 };
 
 // Check if user is authenticated
 export const isAuthenticated = () => {
-  return !!localStorage.getItem("token");
+  const token = localStorage.getItem("token");
+  const isAuth = !!token;
+  return isAuth;
 };
+
+// Legacy function aliases for backward compatibility
+export const registerUser = register;
+export const loginUser = login;
+export const logoutUser = logout;

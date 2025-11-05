@@ -17,9 +17,7 @@ const Collection = () => {
       filterBy === "all" ||
       (filterBy === "sale" && game.discountPercentage > 0) ||
       (filterBy === "free" &&
-        (game.originalPrice === 0 || game.badge === "FREE")) ||
-      (filterBy === "new" && game.badge === "NEW") ||
-      (filterBy === "bestseller" && game.rating >= 4.5);
+        (game.originalPrice === 0 || game.badge === "FREE"));
 
     return matchesSearch && matchesFilter;
   });
@@ -119,8 +117,6 @@ const Collection = () => {
             <option value="all">All Games</option>
             <option value="sale">On Sale</option>
             <option value="free">Free Games</option>
-            <option value="new">New Releases</option>
-            <option value="bestseller">Bestsellers</option>
           </select>
 
           {/* Sort */}

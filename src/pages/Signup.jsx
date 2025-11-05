@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { registerUser } from "../api/authAPI";
+import { register } from "../api/authAPI";
+import { useAuth } from "../contexts/AuthContext";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { updateAuth } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -45,12 +47,17 @@ const Signup = () => {
         password: formData.password,
       };
 
-      await registerUser(userData);
-      alert("Registration successful! Please login.");
-      // Redirect to login page
-      navigate("/login");
-    } catch (error) {
-      setError(error.message);
+      const response = await register(userData);
+      if (response.success) {
+        updateAuth(); // Update auth context
+        alert("Registration successful! You are now logged in.");
+        // Redirect to home page (user is already logged in)
+        navigate("/");
+      } else {
+        setError(response.message || "Registration failed");
+      }
+    } catch {
+      setError("Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }

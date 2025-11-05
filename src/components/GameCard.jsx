@@ -1,5 +1,13 @@
+import { useState } from "react";
+import { useCart } from "../contexts/CartContext";
+import { useWishlist } from "../contexts/WishlistContext";
+import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../contexts/ToastContext";
+import { useNavigate } from "react-router-dom";
+
 const GameCard = ({ game, variant = "default" }) => {
   const {
+    id,
     title,
     originalPrice,
     discountPrice,
@@ -7,12 +15,66 @@ const GameCard = ({ game, variant = "default" }) => {
     rating,
     image,
     badge,
-    isWishlisted = false,
     isInCart = false,
   } = game;
 
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isTogglingWishlist, setIsTogglingWishlist] = useState(false);
+  const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { authenticated } = useAuth();
+  const { addToast } = useToast();
+  const navigate = useNavigate();
+
   const hasDiscount = discountPercentage > 0;
   const displayPrice = hasDiscount ? discountPrice : originalPrice;
+  const gameIsWishlisted = isInWishlist(id);
+
+  const handleAddToCart = async () => {
+    if (!authenticated) {
+      // Redirect to login if not authenticated
+      addToast("Please log in to add items to cart", "error");
+      navigate("/login");
+      return;
+    }
+
+    setIsAddingToCart(true);
+    try {
+      const result = await addToCart(id, 1);
+      if (result.success) {
+        addToast("Game added to cart successfully!", "success");
+      } else {
+        addToast(result.message, "error");
+      }
+    } catch {
+      addToast("Failed to add game to cart", "error");
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const handleToggleWishlist = async () => {
+    if (!authenticated) {
+      // Redirect to login if not authenticated
+      addToast("Please log in to use wishlist", "error");
+      navigate("/login");
+      return;
+    }
+
+    setIsTogglingWishlist(true);
+    try {
+      const result = await toggleWishlist(id);
+      if (result.success) {
+        addToast(result.message, "success");
+      } else {
+        addToast(result.message || "Failed to update wishlist", "error");
+      }
+    } catch {
+      addToast("Failed to update wishlist", "error");
+    } finally {
+      setIsTogglingWishlist(false);
+    }
+  };
 
   return (
     <div
@@ -48,7 +110,6 @@ const GameCard = ({ game, variant = "default" }) => {
             <span
               className={`
               px-2 py-1 text-xs font-semibold rounded
-              ${badge === "NEW" ? "bg-green-600 text-white" : ""}
               ${badge === "SALE" ? "bg-red-600 text-white" : ""}
               ${badge === "FREE" ? "bg-blue-600 text-white" : ""}
               ${badge === "EARLY ACCESS" ? "bg-yellow-600 text-black" : ""}
@@ -71,14 +132,18 @@ const GameCard = ({ game, variant = "default" }) => {
 
         {/* Wishlist Button */}
         <button
+          onClick={handleToggleWishlist}
+          disabled={isTogglingWishlist}
           className={`
             absolute bottom-2 right-2 p-2 rounded-full transition-all duration-200
             ${
-              isWishlisted
+              gameIsWishlisted
                 ? "bg-red-600 text-white"
                 : "bg-black/50 text-gray-300 hover:bg-red-600 hover:text-white"
             }
+            ${isTogglingWishlist ? "opacity-50 cursor-not-allowed" : ""}
           `}
+          title={gameIsWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -141,16 +206,24 @@ const GameCard = ({ game, variant = "default" }) => {
         {/* Add to Cart Button - Always at bottom */}
         <div className="mt-auto">
           <button
+            onClick={handleAddToCart}
+            disabled={isAddingToCart || isInCart}
             className={`
               w-full py-2 px-4 rounded text-sm font-medium transition-all duration-200
               ${
                 isInCart
-                  ? "bg-green-600 text-white hover:bg-green-700"
+                  ? "bg-green-600 text-white cursor-not-allowed"
+                  : isAddingToCart
+                  ? "bg-gray-600 text-white cursor-not-allowed"
                   : "bg-purple-600 text-white hover:bg-purple-700"
               }
             `}
           >
-            {isInCart ? "In Cart" : "Add to Cart"}
+            {isInCart
+              ? "In Cart"
+              : isAddingToCart
+              ? "Adding..."
+              : "Add to Cart"}
           </button>
         </div>
       </div>

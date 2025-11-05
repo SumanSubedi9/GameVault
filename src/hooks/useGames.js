@@ -17,7 +17,6 @@ export const useGames = () => {
       const data = await gamesAPI.getAllGames();
       setGames(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("Error fetching games:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -42,9 +41,7 @@ export const useGames = () => {
  * @returns {Object} Categorized games object
  */
 export const useGameCategories = (games) => {
-  const featuredGames = games
-    .filter((game) => game.featured || game.badge === "NEW")
-    .slice(0, 3);
+  const featuredGames = games.filter((game) => game.featured).slice(0, 3);
 
   // SALE games - games with discounts
   const saleGames = games
