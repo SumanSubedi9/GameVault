@@ -7,5 +7,6 @@ public class UserResponseDto {
     private Long id;
     private String username;
     private String email;
+    private String token; // JWT token for authentication
     // Password not included for security
 }

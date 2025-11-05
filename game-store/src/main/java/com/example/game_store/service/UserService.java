@@ -6,7 +6,9 @@ import com.example.game_store.dto.UserResponseDto;
 import com.example.game_store.exception.EntityNotFoundException;
 import com.example.game_store.model.User;
 import com.example.game_store.repository.UserRepository;
+import com.example.game_store.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +17,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
     /**
      * Register a new user
      */
@@ -22,30 +30,42 @@ public class UserService {
         // Validate business rules
         validateUserRegistration(registrationDto);
 
-        // Create new user with data sanitization
+        // Create new user with data sanitization and password hashing
         User user = new User();
         user.setUsername(registrationDto.getUsername().trim());
         user.setEmail(registrationDto.getEmail().toLowerCase().trim());
-        // Note: In production, you should hash the password using BCrypt
-        user.setPassword(registrationDto.getPassword());
+        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
 
         User savedUser = userRepository.save(user);
-        return convertToResponseDto(savedUser);
+
+        // Generate JWT token
+        String token = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getId());
+
+        UserResponseDto responseDto = convertToResponseDto(savedUser);
+        responseDto.setToken(token);
+
+        return responseDto;
     }
 
     /**
      * Authenticate user login
      */
     public UserResponseDto loginUser(UserLoginDto loginDto) {
-        User user = userRepository.findByUsernameOrEmailIgnoreCase(loginDto.getUsernameOrEmail())
-                .orElseThrow(() -> new EntityNotFoundException("Invalid username/email or password"));
+        User user = userRepository.findByEmailIgnoreCase(loginDto.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("Invalid email or password"));
 
-        // Note: In production, you should verify hashed password using BCrypt
-        if (!user.getPassword().equals(loginDto.getPassword())) {
-            throw new EntityNotFoundException("Invalid username/email or password");
+        // Verify hashed password using BCrypt
+        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+            throw new EntityNotFoundException("Invalid email or password");
         }
 
-        return convertToResponseDto(user);
+        // Generate JWT token
+        String token = jwtUtil.generateToken(user.getUsername(), user.getId());
+
+        UserResponseDto responseDto = convertToResponseDto(user);
+        responseDto.setToken(token);
+
+        return responseDto;
     }
 
     // Private helper method for business validation
