@@ -1,16 +1,16 @@
 package com.example.server.controller;
 
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+// import java.util.Map;
+// import java.util.HashMap;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+// import org.springframework.web.bind.annotation.PostMapping;
+// import org.springframework.web.bind.annotation.PutMapping;
+// import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,82 +37,86 @@ public class GameController {
         return gameService.getAllGames();
     }
 
-    @PostMapping
-    public ResponseEntity<Game> addGame(@RequestBody Game game) {
-        return ResponseEntity.ok(gameService.addGame(game));
-    }
+    // @PostMapping
+    // public ResponseEntity<Game> addGame(@RequestBody Game game) {
+    // return ResponseEntity.ok(gameService.addGame(game));
+    // }
 
-    @PostMapping("/bulk")
-    public ResponseEntity<List<Game>> addMultipleGames(@RequestBody List<Game> games) {
-        return ResponseEntity.ok(gameService.addMultipleGames(games));
-    }
+    // @PostMapping("/bulk")
+    // public ResponseEntity<List<Game>> addMultipleGames(@RequestBody List<Game>
+    // games) {
+    // return ResponseEntity.ok(gameService.addMultipleGames(games));
+    // }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Game> updateGame(@PathVariable Long id, @RequestBody Game updatedGame) {
-        Game game = gameService.updateGame(id, updatedGame);
-        if (game != null) {
-            return ResponseEntity.ok(game);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    // @PutMapping("/{id}")
+    // public ResponseEntity<Game> updateGame(@PathVariable Long id, @RequestBody
+    // Game updatedGame) {
+    // Game game = gameService.updateGame(id, updatedGame);
+    // if (game != null) {
+    // return ResponseEntity.ok(game);
+    // } else {
+    // return ResponseEntity.notFound().build();
+    // }
+    // }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteGame(@PathVariable Long id) {
-        gameService.deleteGame(id);
+    // @DeleteMapping("/{id}")
+    // public ResponseEntity<Map<String, Object>> deleteGame(@PathVariable Long id)
+    // {
+    // gameService.deleteGame(id);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", "Game deleted successfully");
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("success", true);
+    // response.put("message", "Game deleted successfully");
 
-        return ResponseEntity.ok(response);
-    }
+    // return ResponseEntity.ok(response);
+    // }
 
     /**
      * Delete all games (bulk delete for testing/admin purposes)
      * DELETE /api/games/bulk/all
      */
-    @DeleteMapping("/bulk/all")
-    public ResponseEntity<Map<String, Object>> deleteAllGames() {
-        long deletedCount = gameService.deleteAllGames();
+    // @DeleteMapping("/bulk/all")
+    // public ResponseEntity<Map<String, Object>> deleteAllGames() {
+    // long deletedCount = gameService.deleteAllGames();
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", "All games deleted successfully");
-        response.put("deletedCount", deletedCount);
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("success", true);
+    // response.put("message", "All games deleted successfully");
+    // response.put("deletedCount", deletedCount);
 
-        return ResponseEntity.ok(response);
-    }
+    // return ResponseEntity.ok(response);
+    // }
 
     /**
      * Delete multiple games by IDs
      * DELETE /api/games/bulk
      * Body: {"gameIds": [1, 2, 3, 4]}
      */
-    @DeleteMapping("/bulk")
-    public ResponseEntity<Map<String, Object>> deleteGamesByIds(@RequestBody Map<String, Object> request) {
-        @SuppressWarnings("unchecked")
-        List<Integer> gameIds = (List<Integer>) request.get("gameIds");
+    // @DeleteMapping("/bulk")
+    // public ResponseEntity<Map<String, Object>> deleteGamesByIds(@RequestBody
+    // Map<String, Object> request) {
+    // @SuppressWarnings("unchecked")
+    // List<Integer> gameIds = (List<Integer>) request.get("gameIds");
 
-        if (gameIds == null || gameIds.isEmpty()) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", false);
-            response.put("message", "No game IDs provided");
-            return ResponseEntity.badRequest().body(response);
-        }
+    // if (gameIds == null || gameIds.isEmpty()) {
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("success", false);
+    // response.put("message", "No game IDs provided");
+    // return ResponseEntity.badRequest().body(response);
+    // }
 
-        // Convert Integer list to Long list
-        List<Long> longGameIds = gameIds.stream().map(Integer::longValue).toList();
-        long deletedCount = gameService.deleteGamesByIds(longGameIds);
+    // // Convert Integer list to Long list
+    // List<Long> longGameIds = gameIds.stream().map(Integer::longValue).toList();
+    // long deletedCount = gameService.deleteGamesByIds(longGameIds);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", "Games deleted successfully");
-        response.put("deletedCount", deletedCount);
-        response.put("requestedIds", gameIds);
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("success", true);
+    // response.put("message", "Games deleted successfully");
+    // response.put("deletedCount", deletedCount);
+    // response.put("requestedIds", gameIds);
 
-        return ResponseEntity.ok(response);
-    }
+    // return ResponseEntity.ok(response);
+    // }
 
     // ==================== ENHANCED ENDPOINTS ====================
 
